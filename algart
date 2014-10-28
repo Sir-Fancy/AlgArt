@@ -16,80 +16,118 @@ from libalgart.user import *
 
 helpstring = """Usage:
  
- ./algart -c gray -s <height>x<width> -d <color-depth> [-f color] [-b color] [-i] [-v] [-a algorithm] [- file]
- ./algart -c rgb|hsv|hsl|cymk -s <height>x<width> -d <color-depth> [-a algorithm] [file]
+ ./algart -c gray -s <height>x<width> [-f color] [-b color] [-v] (-a algorithm | -i file) -o file
+ ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
+
+ ****
+ For in-depth guide and extended usage, run ./algart -h <topic>
+ ****
+"""
+
+helpstringlong = """Usage:
+
+(lines with ~ are not yet implemented)
+ 
+ ./algart -c gray -s <height>x<width> [-f (h,s,v)] [-b (h,s,v)] [-v] (-a algorithm | -i file) -o file
+ ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
+ ./algart -h
  
  Arguments:
  * = required
- *  -c gray|rgb|hsv|hsl|cymk   Color mode
- *  -s                         Size of image (height x width)
- *  -d                         Color depth (bit depth of color: 1-bit = 2 colors, 8-bit = 256 colors)
-    -f                         Foreground color (grayscale mode only)
-    -b                         Background color (grayscale mode only)
-    -v                         Verbose mode (for debugging)
-    -a                         Algorithm to apply
-    - file                     Filename of algorithm
+    -h                                Extended help (you are here)
+ *  -c gray|rgb|hsv|hls|cymk|custom   Color mode
+ *  -s                                Size of image (height x width)
+    -f (h,s,v)                        Foreground color in HSV [0-255] format (grayscale mode only)
+    -b (h,s,v)                        Background color in HSV [0-255] format (grayscale mode only)
+    -v                                Verbose mode (shows extra info and progress bars, might impact performance)
+ *  -a algorithm | -i file            Algorithm to apply or filename of algorithm file
+ *  -o file                           Location to save the PNG
 
- Modes:
-  MODES   REQUIRED VARIABLES    DESCRIPTIONS (assuming max = 255, hue = red)
-  gray  - K                   - Grayscale (0 = white, 255 = black)
-  hsv   - H, S, V             - Hue, Saturation (0 = white, 255 = red), Value      (0 = black, 255 = white)
-  hsl   - H, S, L             - Hue, Saturation (0 = gray , 255 = red), Luminosity (0 = black, 255 = white)
-  cymk  - C, Y, M, K          - Cyan, Yellow, Magenta, Key
+ Color modes:
+  MODES    REQUIRED VARS    DESCRIPTIONS (assuming max = 255, hue = red)
+  gray   - K              - Grayscale (0 = white, 255 = black)
+  hsv    - H,S,V          - Hue, Saturation (0 = white, 255 = red), Value (0 = black, 255 = white)
+  hls    - H,L,S          - Hue, Luminosity (0 = black, 255 = white), Saturation (0 = gray , 255 = red)
+  cymk   - C,Y,M,K        - Cyan, Yellow, Magenta, Key
 
  Syntax:
     +, -, *, /, %               Arithmetic operators
     ^                           Exponent operator
     (...)                       Parentheses
-    {..., ..., ...}[...]        Array definition and index
-    <, >, <=, >=, ==, !=        Evaluation (evaluates to 0 (false) or 1 (true)
-    ... ? ... : ...             Boolean operators
+ ~  {..., ..., ...}[...]        Array definition and index
+ ~  <, >, <=, >=, ==, !=        Evaluation (evaluates to 0 [false] or 1 [true])
+ ~  ... ? ... : ...             Boolean operators
     =                           Variable assignment
-    | ... |                     Absolute value
-    (~)&&, (E)(~)||             *Bitwise* expressions (NOT LOGICAL, BE CAREFUL!)
-    (N)AND, (X)(N)OR            *Logical* expressions (error if calculating non-boolean values)
-    //                          Comment
+ ~  | ... |                     Absolute value
+ ~  (~)&&, (X)(~)||             *Bitwise* expressions
+ ~  (N)AND, (X)(N)OR            *Logical* expressions (**CAREFUL!** evaluates to 1 or 0, not bitwise)
+    #                           Comment
+    $integer                    Set seed for Algart, evaluated as string. Use it as your title! (optional, but recommended)
     
  Built-in functions:
-    FAC()   Factorial
-    COS()   Cosine
-    SIN()   Sine
-    TAN()   Tangent
+ (read "Defining functions" for why I used 'a' and 'b' for these examples)
+ ~  FAC(a)      Factorial "!"
+    COS(a)      Cosine
+    SIN(a)      Sine
+    TAN(a)      Tangent
+ ~  RAND(a, b)  Return integer between x and y
+ ~  RANDF(a, b) Return float between x and y (discouraged for anything other than RANDF(0, 1))
+ ~  FUZZ(a, b)  Return x, increased or decreased up to a maximum of y (this is an easy way to add "fuzz" to your Algart)
     
+ Note on entropy:
+    Start a file with $ and a number to set the seed for predictable randomness or recreating an example
+    For example:
+    $5135
+    sets an Algart's seed to 5135
+ 
  Read-only variables:
-    x - pixel X coordinate (origin 0,0)
-    y - pixel Y coordinate (origin 0,0)
-    p - pixel number (if 256x256 image, 0 - 65536)
+    X - pixel X coordinate (origin 0,0)
+    Y - pixel Y coordinate (origin 0,0)
+    P - pixel number (if 256x256 image, 0 - 65536)
 
  Read-only constants:
     MAX = Total number of pixels
     ROWS = Total rows of pixels (height)
     COLS = Total columns of pixels (width)
-    MVAL = Max color value (e.g.: 8-bit = 256 colors, therefore range is 0-255, so MVAL = 255)
 
  Example usage:
-    ./algart.py -c gray -s 256x256 -d 8 -a "rate = DEPTH / MAX; k = p * rate"
- or using file instead:   
-    ./algart.py -c gray -s 256x256 -d 8 - algo.txt
+    ./algart.py -c gray -s 256x256 -a "rate = 255 / MAX; k = P * rate" -o test.png
+  or using a file instead:   
+    ./algart.py -c gray -s 256x256 -i algo.txt -o test.png
     
     algo.txt:
       //This is my file!
-      rate = MVAL / MAX
-      k = p * rate
+      rate = 255 / MAX  //this evaluates to (255/65536 for a 256x256 image)
+      K = P * rate
+      
+    To explain the above usage, since 'P' goes up to 65536 (256x256), "rate" will allow us to scale 'P' down to an 8-bit number.
+    This allows us to assign 'K' to a number between 0-255 from a number between 0-65536.
+    
+ Style guide:
+    - User-defined variables should be lowercase. (halfrate = myvar * 0.5)
+    - Read-only variables/required variables/pre-defined functions should be uppercase. (COLS, K, SIN(), etc.)
+    - Spaces = readability. (You'll notice this if you read my source! Also, please don't, because it's sloppy.).
+    - End Algart files with .alg, even though it isn't required. (It'll be a thing, I swear!)
+    
 """
 
 
 
 def main():
     # ./algart.py -c gray -s <height>x<width> -d <color-depth> [-f color] [-b color] [-a <algorithm>]
-    global helpstring
+    #global helpstring, helpstringlong
     args = sys.argv
+    if "-h" in args:
+        print(helpstringlong)
+        sys.exit(0)
+    if len(args) == 1:
+        print(helpstring)
+    
     if "-v" in args:
         verbose = True
     else:
-        verbose = False
-    if len(args) == 1:
-        print(helpstring)
+        verbose = False    
+    
     if "-s" in args:
         dimensions = args[args.index("-s")+1]
         try:
@@ -98,12 +136,17 @@ def main():
             err("ValueError: Invalid -s value, should be format \"WIDTHxHEIGHT\"")
     else:
         err("MissingArgument: \"-s <height>x<width>\"  Size of image (height x width)")
-    if "-d" in args:
-        depth = int(args[args.index("-d")+1])
+    
+    if "-c" in args:
+        colormode = args[args.index("-c")+1]
+        modes = {"gray": ParserGray, "rgb": ParserRGB, "hsv": ParserHSV, "hls": ParserHLS, "cymk": ParserCYMK} 
+        if colormode not in modes:
+            err("ValueError: Invalid color mode (-c gray|rgb|hsv|hsl|cymk)")
     else:
-        err("MissingArgument: \"-d w<depth>\" Color depth")
-    if "-" in args:
-        algfile = args[args.index("-")+1]
+        err("MissingArgument: Color mode (-c gray|rgb|hsv|hsl|cymk)")
+    
+    if "-i" in args:
+        algfile = args[args.index("-i")+1]
         if os.path.isfile(algfile):
             fopen = open(algfile, "r")
             alg = fopen.read()
@@ -112,31 +155,35 @@ def main():
     elif "-a" in args:
         alg = args[args.index("-a")+1]
     else:
-        err("Missing argument: \"-a algorithm\", or \"- file\"")
+        err("MissingArgument: \"-a algorithm\", or \"-i file\"")
     
-    if "-c" in args:
-        colormode = args[args.index("-c")+1]
+    fgcolorval = None
+    bgcolorval = None
+    
+    if "-f" in args:
+        if colormode == "gray":
+            fgcolorval = tuple(args[args.index("-f")+1])
+            for fg in fgcolorval:
+                if fg >= 0 and fg < 255:
+                    err("ValueError: Foreground color out of range. Must be format (0-255, 0-255, 0-255)")
+        else:
+            err("InvalidArgument: -f not applicable for colormode \"{}\"".format(colormode))
+    if "-b" in args:
+        if colormode == "gray":
+            bgcolorval = tuple(args[args.index("-b")+1])
+            for bg in bgcolorval:
+                if bg >= 0 and bg < 255:
+                    err("ValueError: Background color out of range. Must be format (0-255, 0-255, 0-255)")
+        else:
+            err("InvalidArgument: -b not applicable for colormode \"{}\"".format(colormode))
+
+    if "-o" in args:
+        filename = args[args.index("-o")+1]
     else:
-        err("MissingArgument: Color mode (-c gray|rgb|hsv|hsl|cymk)")
-
-    modes = {"gray": ParserGray, "rgb": ParserRGB, "hsv": ParserHSV, "hsl": ParserHSL, "cymk": ParserCYMK} 
-    if colormode not in modes:
-        err("ValueError: Invalid color mode (-c gray|rgb|hsv|hsl|cymk)")
+        err("MissingArgument: -o output filename")    
     
-    fgcolorval = "Default"
-    bgcolorval = "Default"
-    if colormode == "gray":
-        if "-f" in args:
-            fgcolorval = int(args[args.index("-f")+1])
-        if "-b" in args:
-            bgcolorval = int(args[args.index("-b")+1])
-
-    if verbose:
-        print("Mode:{}\tSize:{}\tPixels:{}\tBit-depth:{}\tMax color value:{}\tCustom fg/bg color:({}, {})\nRequired variables: {}\nAlgorithm:\n{}".format(colormode, dimensions, width*height, depth, 2**depth-1, str(fgcolorval), str(bgcolorval), parse.reqvars, alg))
-    
-    
-    parse = modes[colormode](width, height, depth, alg, verbose)
-    parse.crunch()
+    parse = modes[colormode](width, height, alg, verbose, fgcolorval, bgcolorval, filename)
+    parse.mainSequence()
 
 
 if __name__ == '__main__':
