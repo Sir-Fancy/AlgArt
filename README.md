@@ -119,4 +119,18 @@ ____
 ____
 
 * Use a small image size like 64x64 and plug it into your favorite image editor to scale it up. Make sure "Nearest Neighbor" interpolation is selected, if available. This will perserve each pixel's sharp edges.
-* 
+
+* K.I.S.S (Keep It Simple, Stupid)... unless you feel adventurous :)
+
+###Need ideas?
+____
+
+Try making:
+
+* A checkerboard with multiple pixels per tile
+
+* A circle
+
+* A face
+
+(Message me if you actually pull one of these off, I'm curious if it's doable in its current state.)
