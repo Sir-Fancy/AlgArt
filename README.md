@@ -8,12 +8,12 @@ For example:
 
 
 ```
-/algart -c gray -s 64x64 -v -a "K = SIN(P) * 255" -o lel.png
+./algart -c gray -s 64x64 -f "182,0.5,1" -a "K = SIN(P) * 255" -o out.png
 ```
 
 makes this image:
 
-![test image](http://i.imgur.com/NLb1Mie.png)
+![test image](http://i.imgur.com/8FjIhfI.png)
 
 
 ###Documentation (accessible with -h)
