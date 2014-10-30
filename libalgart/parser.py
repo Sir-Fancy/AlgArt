@@ -229,6 +229,7 @@ class Parser:
             finaldata = clamp255(pixeldata)
         else:
             self.maxpvalue = np.amax(pixeldata)
+            if self.verbose: vprint("Creative mode range: 0-{}\n".format(self.maxpvalue))
             finaldata = pixeldata
         i = 0
         for y in xrange(self.height):
