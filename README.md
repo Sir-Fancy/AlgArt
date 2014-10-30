@@ -22,7 +22,7 @@ ____
 ```
 (lines with ~ are not yet implemented)
  
- ./algart -c gray -s <height>x<width> [-f (h,s,v)] [-b (h,s,v)] [-v] (-a algorithm | -i file) -o file
+ ./algart -c gray -s <height>x<width> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
  ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
  ./algart -h
  
@@ -31,8 +31,8 @@ ____
     -h                                Extended help (you are here)
  *  (-c | -C) gray|rgb|hsv|hls|cymk   Color mode (READ BELOW!!)
  *  -s <height>x<width>               Size of image
-    -f (h,s,v)                        Foreground color in HSV [0-255] format (grayscale mode only)
-    -b (h,s,v)                        Background color in HSV [0-255] format (grayscale mode only)
+    -f (h,s,v)                        Foreground color in HLS "0-360,0-1,0-1" format (grayscale mode only)
+    -b (h,s,v)                        Background color in HLS "0-360,0-1,0-1" (grayscale mode only)
     -v                                Verbose mode (shows extra info and progress bars, might impact performance)
  *  -a algorithm | -i file            Algorithm to apply or filename of algorithm file
  *  -o file                           Location to save the PNG
@@ -72,6 +72,7 @@ ____
     COSH(a)     Cosine, hyperbolic
     TANH(a)     Tangent, hyperbolic
     ABS(a)      Absolute value
+    SQRT(a)     Square root
     
  Note on entropy:
     Start a file with $ and a number to set the seed for predictable randomness or recreating an example

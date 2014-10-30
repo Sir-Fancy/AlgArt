@@ -28,7 +28,7 @@ helpstringlong = """Usage:
 
 (lines with ~ are not yet implemented)
  
- ./algart -c gray -s <height>x<width> [-f (h,s,v)] [-b (h,s,v)] [-v] (-a algorithm | -i file) -o file
+ ./algart -c gray -s <height>x<width> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
  ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
  ./algart -h
  
@@ -37,8 +37,8 @@ helpstringlong = """Usage:
     -h                                Extended help (you are here)
  *  (-c | -C) gray|rgb|hsv|hls|cymk   Color mode (READ BELOW!!)
  *  -s <height>x<width>               Size of image
-    -f (h,s,v)                        Foreground color in HSV [0-255] format (grayscale mode only)
-    -b (h,s,v)                        Background color in HSV [0-255] format (grayscale mode only)
+    -f (h,s,v)                        Foreground color in HLS "0-360,0-1,0-1" format (grayscale mode only)
+    -b (h,s,v)                        Background color in HLS "0-360,0-1,0-1" (grayscale mode only)
     -v                                Verbose mode (shows extra info and progress bars, might impact performance)
  *  -a algorithm | -i file            Algorithm to apply or filename of algorithm file
  *  -o file                           Location to save the PNG
@@ -180,18 +180,24 @@ def main():
     
     if "-f" in args:
         if colormode == "gray":
-            fgcolorval = tuple(args[args.index("-f")+1])
-            for fg in fgcolorval:
-                if fg >= 0 and fg < 255:
-                    err("ValueError: Foreground color out of range. Must be format (0-255, 0-255, 0-255)")
+            fgstr = args[args.index("-f")+1].split(",")
+            fgcolorval = map(float, fgstr)
+            if fgcolorval[0] > 360 or fgcolorval[0] < 0:
+                err("ValueError: Foreground color out of range. Must be format (0-360, 0.0-1.0, 0.0-1.0)")
+            for fg in fgcolorval[1:]:
+                if fg < 0.0 or fg > 1.0:
+                    err("ValueError: Foreground color out of range. Must be format (0-360, 0.0-1.0, 0.0-1.0)")
         else:
             err("InvalidArgument: -f not applicable for colormode \"{}\"".format(colormode))
     if "-b" in args:
         if colormode == "gray":
-            bgcolorval = tuple(args[args.index("-b")+1])
-            for bg in bgcolorval:
-                if bg >= 0 and bg < 255:
-                    err("ValueError: Background color out of range. Must be format (0-255, 0-255, 0-255)")
+            bgstr = args[args.index("-b")+1].split(",")
+            bgcolorval = map(float, bgcolorval)
+            if bgcolorval[0] > 360 or bgcolorval[0] < 0:
+                err("ValueError: Background color out of range. Must be format (0-360, 0.0-1.0, 0.0-1.0)")
+            for bg in bgcolorval[1:]:
+                if bg < 0.0 or bg > 1.0:
+                    err("ValueError: Background color out of range. Must be format (0-360, 0.0-1.0, 0.0-1.0)")
         else:
             err("InvalidArgument: -b not applicable for colormode \"{}\"".format(colormode))
 

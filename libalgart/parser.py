@@ -100,13 +100,13 @@ class Parser:
         self.verbose = verbose
         self.filename = filename
         if fg is not None:
-            self.fghue = colorsys.hsv_to_rgb(fg[0]/255, fg[1]/255, fg[2]/255)
+            self.fghue = colorsys.hls_to_rgb(fg[0]/360, fg[1], fg[2])
         else:
-            self.fghue = colorsys.hsv_to_rgb(0, 0, 1)
+            self.fghue = colorsys.hls_to_rgb(0, 0, 1)
         if bg is not None:
-            self.bghue = colorsys.hsv_to_rgb(bg[0]/255, bg[1]/255, bg[2]/255)
+            self.bghue = colorsys.hls_to_rgb(bg[0]/360, bg[1], bg[2])
         else:
-            self.bghue = colorsys.hsv_to_rgb(0, 0, 0)
+            self.bghue = colorsys.hls_to_rgb(0, 0, 0)
         self.constants = {"ROWS": height, "COLS": width, "MAX": width*height}
         self.optvars = {"X": 0, "Y": 0, "P": 0}
         self.locals = {}
@@ -116,7 +116,7 @@ class Parser:
     
     def mainSequence(self):
         self.newImage()
-        if self.verbose: vprint("Size:{}\tPixels:{}\tCustom fg/bg color:({}, {})\nRequired variables: {}\nAlgorithm:\n{}\n".format("{}x{}".format(self.width, self.height), self.width*self.height, self.fghue, self.bghue, self.reqvars, self.alg))
+        if self.verbose: vprint("Size:{}\tPixels:{}\tCustom fg/bg RGB color:({}, {})\nRequired variables: {}\nAlgorithm:\n{}\n".format("{}x{}".format(self.width, self.height), self.width*self.height, self.fghue, self.bghue, self.reqvars, self.alg))
         pixeldata = self.crunch()
         self.placePixels(pixeldata)
         self.saveImage()
