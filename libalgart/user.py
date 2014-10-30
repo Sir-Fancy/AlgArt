@@ -7,6 +7,7 @@
 # Zack Marotta  (c)
 
 from __future__ import division
+from numpy import minimum, maximum
 import sys
 
 
@@ -23,33 +24,38 @@ def vprint(msg):
 
 def missing(char, linenum, line): #was used for any missing character, but that's now handled by pyparsing,
     tip = False                   #> so now it's adapted for missing "="s in assignments
-    if line[1] == "==":
-        tip = True
     lstr = line.join(" ")
     pos = len(line)[0] + 1
     
     err("InvalidStatement: Missing '{}' on line {}\n{}\n{} expected '='".format(char, linenum + 1, lstr, " " * pos + "^" ), more=tip)
-    if tip:
-        err("\n(Did you mean \"=\"? ;-)") #we've all done it :)
+    if line[1] == "==": err("\n(Did you mean \"=\"? ;-)") #we've all done it :)
     sys.exit(1)
     
-def isNum(x): #legacy; probably won't be used anymore.    ...heh. It's funny I'm calling something legacy even before the first release.
-    """Check if x is a number."""
-    try:
-        float(x)
-        return True
-    except ValueError:
-        return False
+#def isNum(x): #legacy; probably won't be used anymore.    ...heh. It's funny I'm calling something legacy even before the first release.
+#    """Check if x is a number."""
+#    try:
+#        float(x)
+#        return True
+#    except ValueError:
+#        return False
     
 def lerp(v0, v1, p):
     """Linear interpolation between tuples v0 and v1 with phase p"""
     return (1 - p) * v0 + p * v1
 
+def clamp255(a):
+    """Convenience function for clamping to 0-255"""
+    return maximum(0, minimum(a, 255))
+
 def progbar(p, f):
     """Display a progress bar between 0 and f with progress p in verbose"""
-    i = int(round(p/f * 60))
-    verbose("\x1b[93m[{}{}] {} / {}\x1b[0m\r".format("="*i, "-"*(60-i), p, f))
-    if p == f:
-        print()
-    
-    
+    pp = p + 1
+    i = int(round((pp+1)/f * 60))
+    vprint("\x1b[93m[{}{}] {} / {}\x1b[0m\r".format("="*i, " "*(60-i), pp, f))
+    if pp == f:
+        sys.stderr.write("\n")
+        
+
+class Log:
+    def write(self, msg):
+        err(msg)
