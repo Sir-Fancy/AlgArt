@@ -146,7 +146,6 @@ class Parser:
             return float(op)
         
     def crunch(self):
-        print("\n(This may take a few minutes. Please be patient!)")
         print("Parsing...")
         global exprStack
         exprStack = []
