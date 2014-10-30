@@ -72,7 +72,7 @@ helpstringlong = """Usage:
     
  Built-in functions:
     FAC(a)      Factorial "!"
-    SIN(a)      Sine
+    SIN(a)      Sine (all trig functions use radians)
     COS(a)      Cosine
     TAN(a)      Tangent
     SINH(a)     Sine, hyperbolic
@@ -218,4 +218,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        err("\nAborted")

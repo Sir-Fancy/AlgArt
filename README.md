@@ -66,7 +66,7 @@ ____
     
  Built-in functions:
     FAC(a)      Factorial "!"
-    SIN(a)      Sine
+    SIN(a)      Sine (all trig functions use radians)
     COS(a)      Cosine
     TAN(a)      Tangent
     SINH(a)     Sine, hyperbolic
@@ -139,3 +139,10 @@ Try making:
 * A face
 
 (Message me if you actually pull one of these off, I'm curious if it's doable in its current state.)
+
+###My favorites
+______
+
+*Still* need ideas? Try tweaking some of my favorites:
+
+```./algart -c gray -s 80x80 -f "182,0.5,1" -a "K = (SIN(P/12) * 127) - (TAN(X/3) * 30) + (COS(Y/4) * 127)" -o lel.png```
