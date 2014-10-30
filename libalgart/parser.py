@@ -65,21 +65,23 @@ def BNF():
         plus  = Literal("+")
         minus = Literal("-")
         mult  = Literal("*")
-        div   = Literal("/")
+        div   = Literal("/") | Literal("%")
         lpar  = Literal("(").suppress()
         rpar  = Literal(")").suppress()
         addop  = plus | minus
-        multop = mult | div
+        miscop = Keyword("<<") | Keyword(">>") | Keyword("~") | Keyword("&&") | Keyword("X||") | Keyword("||") | Keyword("AND") | Keyword("XOR") | Keyword("OR") | Keyword("NOT") | Keyword(">=") | Keyword(">") | Keyword("<=") | Keyword("<") | Keyword("==")
+        multop = mult | div | miscop
+        
         expop = Literal("^")
         
         expr = Forward()
         atom = ((0,None)*minus + (fnumber | ident + lpar + expr + rpar | ident).setParseAction(pushFirst) | 
-                Group(lpar + expr + rpar)).setParseAction(pushUMinus) 
+                Group(lpar + expr + rpar)).setParseAction(pushUMinus) # Todo: Find out how the fuck this recursive stuff works
         
-        factor = Forward()                                                         #
-        factor << atom + ZeroOrMore((expop + factor).setParseAction(pushFirst))    #
-        term = factor + ZeroOrMore((multop + factor).setParseAction(pushFirst))    #
-        expr << term + ZeroOrMore((addop + term).setParseAction(pushFirst))        # Todo: Find out how the fuck this recursive stuff works
+        factor = Forward()
+        factor << atom + ZeroOrMore((expop + factor).setParseAction(pushFirst))
+        term = factor + ZeroOrMore((multop + factor).setParseAction(pushFirst))
+        expr << term + ZeroOrMore((addop + term).setParseAction(pushFirst))
         bnf = expr
     return bnf
 
@@ -91,13 +93,14 @@ comment = Literal("#") + restOfLine
 pattern = assignment + Optional(comment)
     
 class Parser:
-    def __init__(self, isclamp, width, height, alg, verbose, fg, bg, filename):
+    def __init__(self, isclamp, width, height, alg, verbose, debug, fg, bg, filename):
         self.isclamp = isclamp
         self.width = width
         self.height = height
         self.bands = 1
         self.alg = alg
         self.verbose = verbose
+        self.debug = debug
         self.filename = filename
         if fg is not None:
             self.fghue = colorsys.hls_to_rgb(fg[0]/360, fg[1], fg[2])
@@ -131,12 +134,6 @@ class Parser:
             return self.ops.defs[op](op1, op2)
         elif op in self.fns.defs:                  #perform fn
             return self.fns.defs[op](self.evaluateStack(s))
-        elif op is True:
-            print s
-            return 1.0
-        elif op is False:
-            print s
-            return 0.0
         elif op[0].isalpha():
             if op in self.optvars:
                 return self.optvars[op]     #return optvar
@@ -175,16 +172,17 @@ class Parser:
                     if input_string != '':
                         del exprStack[:]
                     
-                        isplit = input_string.split()
-                        if isplit[1] != "=":
-                            if isplit[0][0] == "$":
-                                try:
-                                    rand.seed(int(isplit[0][1:]))
-                                except:
-                                    err("ParseFailure: Line 1\n{}\n ^ invalid seed value".format(input_string))
-                            else:
-                                missing("=", i, isplit)
-                    
+                        ###  IMPLEMENT WHEN RANDOM FUNCTIONS ARRIVE
+                        #isplit = input_string.split()
+                        #if isplit[1] != "=":
+                        #    if isplit[0][0] == "$":
+                        #        try:
+                        #            rand.seed(int(isplit[0][1:]))
+                        #        except:
+                        #            err("ParseFailure: Line 1\n{}\n ^ invalid seed value".format(input_string))
+                        #    else:
+                        #        missing("=", i, isplit)
+                        ###
 
                         #if self.verbose: vprint(input_string + "\n")#
                         try:
@@ -211,7 +209,7 @@ class Parser:
                     #end of current line
                 for v in self.reqvars:
                     pixval.append(self.locals[v])                   #[255,255,255]
-                pixeldata[currentRow, currentCol] = pixval          #[ ..., [255,255,255] ]
+                pixeldata[currentCol, currentRow] = pixval          #[ ..., [255,255,255] ]
                 self.optvars["P"] += 1
                 #end of column
             #end of row
@@ -239,12 +237,24 @@ class Parser:
                 color = self.convert(finaldata[x,y])
                 self.pix[x,y] = color
                 i += 1
+        if self.debug: self.saveDebug(finaldata)
+
     
     def saveImage(self):
         self.im.save(self.filename, "png")
         print("Saving as {}".format(self.filename))
         
     
+    def saveDebug(self, array):
+        vprint("Saving debug data to debug.txt...\n")
+        f = open("debug.txt", "w")
+        for y in xrange(self.height):
+            for x in xrange(self.width):
+                for z in array[x,y]:
+                    f.write(str(z))
+                f.write(",")
+            f.write("\n")
+        f.close()
     
 
 #http://effbot.org/imagingbook/imagedraw.htm

@@ -16,8 +16,8 @@ from libalgart.user import *
 
 helpstring = """Usage:
  
- ./algart -c gray -s <height>x<width> [-f color] [-b color] [-v] (-a algorithm | -i file) -o file
- ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
+ ./algart -c gray -s <height>x<width> [-f color] [-b color] [-v] [-D] (-a algorithm | -i file) -o file
+ ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] [-D] (-a algorithm | -i file) -o file
 
  ****
  For in-depth guide and extended usage, run ./algart -h <topic>
@@ -40,6 +40,7 @@ helpstringlong = """Usage:
     -f (h,s,v)                        Foreground color in HLS "0-360,0-1,0-1" format (grayscale mode only)
     -b (h,s,v)                        Background color in HLS "0-360,0-1,0-1" (grayscale mode only)
     -v                                Verbose mode (shows extra info and progress bars, might impact performance)
+    -D                                Debug; outputs individual pixel values to debug.txt (overwrites previous)
  *  -a algorithm | -i file            Algorithm to apply or filename of algorithm file
  *  -o file                           Location to save the PNG
 
@@ -85,6 +86,7 @@ helpstringlong = """Usage:
     For example:
     $foo
     sets an Algart's RNG seed to "foo"
+    NOTE: THIS DOESN'T DO ANYTHING YET
  
  Read-only variables:
     X - pixel X coordinate (origin 0,0)
@@ -138,7 +140,12 @@ def main():
     if "-v" in args:
         verbose = True
     else:
-        verbose = False    
+        verbose = False
+    
+    if "-D" in args:
+        debug = True
+    else:
+        debug = False
     
     if "-s" in args:
         dimensions = args[args.index("-s")+1]
@@ -206,7 +213,7 @@ def main():
     else:
         err("MissingArgument: -o output filename")    
     
-    parse = modes[colormode](isclamp, width, height, alg, verbose, fgcolorval, bgcolorval, filename)
+    parse = modes[colormode](isclamp, width, height, alg, verbose, debug, fgcolorval, bgcolorval, filename)
     parse.mainSequence()
 
 

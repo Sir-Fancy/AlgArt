@@ -34,6 +34,7 @@ ____
     -f (h,s,v)                        Foreground color in HLS "0-360,0-1,0-1" format (grayscale mode only)
     -b (h,s,v)                        Background color in HLS "0-360,0-1,0-1" (grayscale mode only)
     -v                                Verbose mode (shows extra info and progress bars, might impact performance)
+    -D                                Debug; outputs individual pixel values to debug.txt (overwrites previous)
  *  -a algorithm | -i file            Algorithm to apply or filename of algorithm file
  *  -o file                           Location to save the PNG
 
@@ -79,6 +80,7 @@ ____
     For example:
     $foo
     sets an Algart's RNG seed to "foo"
+    NOTE: THIS DOESN'T DO ANYTHING YET
  
  Read-only variables:
     X - pixel X coordinate (origin 0,0)
@@ -120,6 +122,8 @@ ____
 ____
 
 * Use a small image size like 64x64 and plug it into your favorite image editor to scale it up. Make sure "Nearest Neighbor" interpolation is selected, if available. This will perserve each pixel's sharp edges.
+
+* Apply a gaussian/mosaic blur in a photo editor before you scale it up to blend and interpolate the pixels
 
 * K.I.S.S (Keep It Simple, Stupid)... unless you feel adventurous :)
 
