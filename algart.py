@@ -16,8 +16,8 @@ from libalgart.user import *
 
 helpstring = """Usage:
  
- ./algart -c gray -s <height>x<width> [-f color] [-b color] [-v] [-D] (-a algorithm | -i file) -o file
- ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] [-D] (-a algorithm | -i file) -o file
+ ./algart.py -c gray -s <height>x<width> [-f color] [-b color] [-v] [-D] (-a algorithm | -i file) -o file
+ ./algart.py -c rgb|hsv|hls|cymk -s <height>x<width> [-v] [-D] (-a algorithm | -i file) -o file
 
  ****
  For in-depth guide and extended usage, run ./algart -h <topic>
@@ -28,9 +28,9 @@ helpstringlong = """Usage:
 
 (lines with ~ are not yet implemented)
  
- ./algart -c gray -s <height>x<width> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
- ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
- ./algart -h
+ ./algart.py -c gray -s <height>x<width> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
+ ./algart.py -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
+ ./algart.py -h
  
  Arguments:
  * = required
@@ -68,7 +68,6 @@ helpstringlong = """Usage:
     (~)&&, (X)(~)||, <<, >>     *Bitwise* operators
     (N)AND, (X)(N)OR            *Logical* operators (**CAREFUL!** evaluates to 1 or 0, not bitwise)
     #                           Comment
-    $string                     Set seed for Algart, evaluated as string. Use it as your title! (optional, but recommended)
     
  Built-in functions:
     FAC(a)      Factorial "!"
@@ -81,13 +80,6 @@ helpstringlong = """Usage:
     ABS(a)      Absolute value
     SQRT(a)     Square root
     
- Note on entropy:
-    Start a file with $ and a number to set the seed for predictable randomness or recreating an example
-    For example:
-    $foo
-    sets an Algart's RNG seed to "foo"
-    NOTE: THIS DOESN'T DO ANYTHING YET
- 
  Read-only variables:
     X - pixel X coordinate (origin 0,0)
     Y - pixel Y coordinate (origin 0,0)
@@ -123,7 +115,16 @@ helpstringlong = """Usage:
     - Spaces = readability. (You'll notice this if you read my source! Also, please don't, because it's sloppy.).
     - End Algart files with .alg, even though it isn't required. (It'll be a thing, I swear!)  
 """
-
+#
+#    $string                     Set seed for Algart, evaluated as string. Use it as your title! (optional, but recommended)
+#
+# Note on entropy:
+#    Start a file with $ and a number to set the seed for predictable randomness or recreating an example
+#    For example:
+#    $foo
+#    sets an Algart's RNG seed to "foo"
+#    NOTE: THIS DOESN'T DO ANYTHING YET
+ 
 
 
 def main():
