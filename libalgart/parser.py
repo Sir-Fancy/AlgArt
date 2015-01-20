@@ -250,9 +250,10 @@ class Parser(object):
         f = open("debug.txt", "w")
         for y in xrange(self.height):
             for x in xrange(self.width):
+                f.write("(")
                 for z in array[x,y]:
-                    f.write(str(z))
-                f.write(",")
+                    f.write(str(z) + ",")
+                f.write("),")
             f.write("\n")
         f.close()
     
@@ -274,14 +275,16 @@ class ParserGray(Parser):
 
 class ParserRGB(Parser):
     def newImage(self):
-        err("NOT IMPLEMENTED")
         self.reqvars = ("R", "G", "B")
         self.bands = 3
         self.im = Image.new("RGB", (self.width, self.height))
         self.pix = self.im.load()
     
     def convert(self, p):
-        return p
+        r = p[0] / self.maxpvalue * 255 #make sure pixels align to 0-255 if in creative mode. if not, well, this is a sanity check
+        g = p[1] / self.maxpvalue * 255
+        b = p[2] / self.maxpvalue * 255
+        return (int(round(r)), int(round(g)), int(round(b)))
 
 class ParserHLS(Parser):
     def newImage(self):

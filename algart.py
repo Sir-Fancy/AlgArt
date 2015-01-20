@@ -132,9 +132,12 @@ def main():
     #global helpstring, helpstringlong
     args = sys.argv
     isclamp = None
-    if "-h" in args or len(args) == 1:
+    if "-h" in args:
         print(helpstringlong)
         sys.exit(0)
+    if len(args) == 1:
+        print(helpstring)
+        #sys.exit(0)
     
     if "-v" in args:
         verbose = True
