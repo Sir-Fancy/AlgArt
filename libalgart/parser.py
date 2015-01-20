@@ -189,7 +189,7 @@ class Parser(object):
                         except ParseException as pe:
                             L=['Parse Failure',input_string]
                       
-                      # show result of parsing the input string
+                        #show result of parsing the input string
                         #if self.verbose: print(input_string, "->", L)#
                         if len(L)==0 or L[0] != 'Parse Failure':
                             #if self.verbose: vprint("exprStack = {}\n".format(exprStack))#

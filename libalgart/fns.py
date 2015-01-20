@@ -26,8 +26,4 @@ class Fns(object):
                      "COSH": np.cosh,
                      "TANH": np.tanh,
                      "ABS" : np.absolute,
-                     "SQRT": np.sqrt,
-                     "GET" : self.get }
-        
-    def get(self, a):
-        
+                     "SQRT": np.sqrt }
