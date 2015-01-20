@@ -20,7 +20,7 @@ helpstring = """Usage:
  ./algart.py -c rgb|hsv|hls|cymk -s <height>x<width> [-v] [-D] (-a algorithm | -i file) -o file
 
  ****
- For in-depth guide and extended usage, run ./algart -h <topic>
+ For in-depth guide and extended usage, run ./algart -h
  ****
 """
 
@@ -132,11 +132,9 @@ def main():
     #global helpstring, helpstringlong
     args = sys.argv
     isclamp = None
-    if "-h" in args:
+    if "-h" in args or len(args) == 1:
         print(helpstringlong)
         sys.exit(0)
-    if len(args) == 1:
-        print(helpstring)
     
     if "-v" in args:
         verbose = True

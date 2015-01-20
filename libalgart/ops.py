@@ -8,7 +8,7 @@
 
 import numpy as np
 
-class Ops:
+class Ops(object):
     def __init__(self):
         self.defs = {"+" : np.add,
                      "-" : np.subtract,

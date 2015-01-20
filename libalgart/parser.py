@@ -92,7 +92,7 @@ comment = Literal("#") + restOfLine
 #pattern = assignment
 pattern = assignment + Optional(comment)
     
-class Parser:
+class Parser(object):
     def __init__(self, isclamp, width, height, alg, verbose, debug, fg, bg, filename):
         self.isclamp = isclamp
         self.width = width
@@ -120,8 +120,8 @@ class Parser:
     def mainSequence(self):
         self.newImage()
         if self.verbose: vprint("Size:{}\tPixels:{}\tCustom fg/bg RGB color:({}, {})\nRequired variables: {}\nAlgorithm:\n{}\n".format("{}x{}".format(self.width, self.height), self.width*self.height, self.fghue, self.bghue, self.reqvars, self.alg))
-        pixeldata = self.crunch()
-        self.placePixels(pixeldata)
+        self.crunch()
+        self.placePixels()
         self.saveImage()
     
     def evaluateStack(self, s):
@@ -149,7 +149,7 @@ class Parser:
         print("Parsing...")
         global exprStack
         exprStack = []
-        pixeldata = np.ndarray(shape=(self.height, self.width, self.bands), dtype=float)
+        self.pixeldata = np.ndarray(shape=(self.height, self.width, self.bands), dtype=float)
         maxp = self.constants["MAX"]
         ws = self.alg.replace("\n", ";").split(";") #lines with leading and/or trailing whitespace
         lines = map(lambda x: x.strip(), ws) #trims whitespace
@@ -208,11 +208,11 @@ class Parser:
                     #end of current line
                 for v in self.reqvars:
                     pixval.append(self.locals[v])                   #[255,255,255]
-                pixeldata[currentCol, currentRow] = pixval          #[ ..., [255,255,255] ]
+                self.pixeldata[currentCol, currentRow] = pixval          #[ ..., [255,255,255] ]
                 self.optvars["P"] += 1
                 #end of column
             #end of row
-        return pixeldata
+        #end of method
     
     def newImage(self):
         pass
@@ -220,16 +220,16 @@ class Parser:
     def convert(p): #this will be overridden to return an RGB/CYMK tuple
         pass
     
-    def placePixels(self, pixeldata):
+    def placePixels(self):
         print("Placing pixels...")
         maxp = self.constants["MAX"]
         if self.isclamp:
             self.maxpvalue = 255
-            finaldata = clamp255(pixeldata)
+            finaldata = clamp255(self.pixeldata)
         else:
-            self.maxpvalue = np.amax(pixeldata)
+            self.maxpvalue = np.amax(self.pixeldata)
             if self.verbose: vprint("Creative mode range: 0-{}\n".format(self.maxpvalue))
-            finaldata = pixeldata
+            finaldata = self.pixeldata
         i = 0
         for y in xrange(self.height):
             for x in xrange(self.width):
@@ -237,7 +237,7 @@ class Parser:
                 color = self.convert(finaldata[x,y])
                 self.pix[x,y] = color
                 i += 1
-        if self.debug: self.saveDebug(finaldata)
+        if self.debug: self.saveDebug(self.pixeldata)
 
     
     def saveImage(self):

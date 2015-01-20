@@ -7,7 +7,7 @@
 # Zack Marotta  (c)
 
 from __future__ import division
-from numpy import minimum, maximum
+from numpy import minimum, maximum, ma
 import sys
 
 
@@ -45,7 +45,8 @@ def lerp(v0, v1, p):
 
 def clamp255(a):
     """Convenience function for clamping to 0-255"""
-    return maximum(0, minimum(a, 255))
+    #return maximum(0, minimum(a, 255))
+    return ma.clip(a, 0, 255)
 
 def progbar(p, f):
     """Display a progress bar between 0 and f with progress p in verbose"""
