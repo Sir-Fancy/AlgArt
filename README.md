@@ -15,6 +15,7 @@ makes this image:
 
 ![test image](http://i.imgur.com/8FjIhfI.png)
 
+[Here's some more examples](http://imgur.com/a/VXswe)
 
 ###Documentation (accessible with -h)
 ____
