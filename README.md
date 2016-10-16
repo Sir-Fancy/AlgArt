@@ -2,6 +2,8 @@
 ###Algorithmic image generator in python
 ____
 
+(This is made for Python 2, and I haven't upgraded it to Python 3 yet.)
+
 Inspired by the algorithmic music generator, [ByteBeat](http://canonical.org/~kragen/bytebeat/), AlgArt is an image generator that allows you to write your own algorithms to create images.
 
 For example:
