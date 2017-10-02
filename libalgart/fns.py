@@ -8,13 +8,9 @@
 import numpy as np
 import sys
 from math import factorial
+import random
 
 sys.path.append("..")
-
-# IMPLEMENT THIS
-# ~  RAND(a, b)  Return integer between 'a' and 'b'
-# ~  RANDF(a, b) Return float between 'a' and 'b' (discouraged for anything other than RANDF(0, 1))
-# ~  FUZZ(a, b)  Return 'a', increased or decreased up to a maximum of 'b' (this is an easy way to add "fuzz" to your Algart)
 
 class Fns(object):
     def __init__(self):
@@ -26,4 +22,5 @@ class Fns(object):
                      "COSH": np.cosh,
                      "TANH": np.tanh,
                      "ABS" : np.absolute,
-                     "SQRT": np.sqrt }
+                     "SQRT": np.sqrt,
+                     "RAND": lambda x: np.random.random()}

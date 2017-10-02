@@ -77,7 +77,8 @@ ____
     TANH(a)     Tangent, hyperbolic
     ABS(a)      Absolute value
     SQRT(a)     Square root
-    
+    RAND(*0*)     Random float (0, 1]  **Must have argument, even though it's unused**
+     
  Note on entropy:
     Start a file with $ and a number to set the seed for predictable randomness or recreating an example
     For example:
@@ -101,8 +102,8 @@ ____
     ./algart -c gray -s 256x256 -i algo.txt -o test.png
     
     algo.txt:
-      //This is my file!
-      rate = 255 / MAX  //this evaluates to (255/65536 for a 256x256 image)
+      #This is my file!
+      rate = 255 / MAX  #this evaluates to (255/65536 for a 256x256 image)
       K = P * rate
       
     To explain the above usage, since 'P' goes up to 65536 (256x256), "rate" will allow us to scale 'P' down to an 8-bit number.
