@@ -24,13 +24,11 @@ helpstring = """Usage:
  ****
 """
 
-helpstringlong = """Usage:
-
-(lines with ~ are not yet implemented)
+helpstringlong = """(lines with ~ are not yet implemented)
  
- ./algart.py -c gray -s <height>x<width> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
- ./algart.py -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
- ./algart.py -h
+ ./algart -c gray -s <height>x<width> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
+ ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
+ ./algart -h
  
  Arguments:
  * = required
@@ -68,6 +66,7 @@ helpstringlong = """Usage:
     (~)&&, (X)(~)||, <<, >>     *Bitwise* operators
     (N)AND, (X)(N)OR            *Logical* operators (**CAREFUL!** evaluates to 1 or 0, not bitwise)
     #                           Comment
+    $string                     Set seed for Algart, evaluated as string. Use it as your title! (optional, but recommended)
     
  Built-in functions:
     FAC(a)      Factorial "!"
@@ -79,7 +78,15 @@ helpstringlong = """Usage:
     TANH(a)     Tangent, hyperbolic
     ABS(a)      Absolute value
     SQRT(a)     Square root
-    
+    RAND(0)     Random float (0, 1]  **Must have argument, even though it's unused**
+     
+ Note on entropy:
+    Start a file with $ and a number to set the seed for predictable randomness or recreating an example
+    For example:
+    $foo
+    sets an Algart's RNG seed to "foo"
+    NOTE: THIS DOESN'T DO ANYTHING YET
+ 
  Read-only variables:
     X - pixel X coordinate (origin 0,0)
     Y - pixel Y coordinate (origin 0,0)
@@ -96,8 +103,8 @@ helpstringlong = """Usage:
     ./algart -c gray -s 256x256 -i algo.txt -o test.png
     
     algo.txt:
-      //This is my file!
-      rate = 255 / MAX  //this evaluates to (255/65536 for a 256x256 image)
+      #This is my file!
+      rate = 255 / MAX  #this evaluates to (255/65536 for a 256x256 image)
       K = P * rate
       
     To explain the above usage, since 'P' goes up to 65536 (256x256), "rate" will allow us to scale 'P' down to an 8-bit number.

@@ -77,7 +77,7 @@ ____
     TANH(a)     Tangent, hyperbolic
     ABS(a)      Absolute value
     SQRT(a)     Square root
-    RAND(*0*)     Random float (0, 1]  **Must have argument, even though it's unused**
+    RAND(0)     Random float (0, 1]  **Must have argument, even though it's unused**
      
  Note on entropy:
     Start a file with $ and a number to set the seed for predictable randomness or recreating an example
