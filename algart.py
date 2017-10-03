@@ -17,7 +17,7 @@ from libalgart.user import *
 helpstring = """Usage:
  
  ./algart.py -c gray -s <width>x<height> [-f color] [-b color] [-v] [-D] (-a algorithm | -i file) -o file
- ./algart.py -c rgb|hsv|hls|cymk -s <width>x<height> [-v] [-D] (-a algorithm | -i file) -o file
+ ./algart.py -c rgb|hsv|hls|cmyk -s <width>x<height> [-v] [-D] (-a algorithm | -i file) -o file
 
  ****
  For in-depth guide and extended usage, run ./algart -h
@@ -27,13 +27,13 @@ helpstring = """Usage:
 helpstringlong = """(lines with ~ are not yet implemented)
  
  ./algart -c gray -s <width>x<height> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
- ./algart -c rgb|hsv|hls|cymk -s <width>x<height> [-v] (-a algorithm | -i file) -o file
+ ./algart -c rgb|hsv|hls|cmyk -s <width>x<height> [-v] (-a algorithm | -i file) -o file
  ./algart -h
  
  Arguments:
  * = required
     -h                                Extended help (you are here)
- *  (-c | -C) gray|rgb|hsv|hls|cymk   Color mode (READ BELOW!!)
+ *  (-c | -C) gray|rgb|hsv|hls|cmyk   Color mode (READ BELOW!!)
  *  -s <width>x<height>               Size of image
     -f (h,s,v)                        Foreground color in HLS "0-360,0-1,0-1" format (grayscale mode only)
     -b (h,s,v)                        Background color in HLS "0-360,0-1,0-1" (grayscale mode only)
@@ -55,7 +55,7 @@ helpstringlong = """(lines with ~ are not yet implemented)
   gray   - K              - Grayscale       (0 = black, 255 = white)
   hsv    - H,S,V          - Hue, Saturation (0 = white, 255 = red), Value (0 = black, 255 = white)
   hls    - H,L,S          - Hue, Luminosity (0 = black, 255 = white), Saturation (0 = gray , 255 = red)
-  cymk   - C,Y,M,K        - Cyan, Yellow, Magenta, Key
+  cmyk   - C,M,Y,K        - Cyan, Magenta, Yellow, Key
 
  Syntax:
     +, -, *, /, %               Arithmetic operators
