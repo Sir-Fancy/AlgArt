@@ -25,15 +25,15 @@ ____
 ```
 (lines with ~ are not yet implemented)
  
- ./algart -c gray -s <height>x<width> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
- ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
+ ./algart -c gray -s <width>x<height> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
+ ./algart -c rgb|hsv|hls|cymk -s <width>x<height> [-v] (-a algorithm | -i file) -o file
  ./algart -h
  
  Arguments:
  * = required
     -h                                Extended help (you are here)
  *  (-c | -C) gray|rgb|hsv|hls|cymk   Color mode (READ BELOW!!)
- *  -s <height>x<width>               Size of image
+ *  -s <width>x<height>               Size of image
     -f (h,s,v)                        Foreground color in HLS "0-360,0-1,0-1" format (grayscale mode only)
     -b (h,s,v)                        Background color in HLS "0-360,0-1,0-1" (grayscale mode only)
     -v                                Verbose mode (shows extra info and progress bars, might impact performance)

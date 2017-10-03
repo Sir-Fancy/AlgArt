@@ -16,8 +16,8 @@ from libalgart.user import *
 
 helpstring = """Usage:
  
- ./algart.py -c gray -s <height>x<width> [-f color] [-b color] [-v] [-D] (-a algorithm | -i file) -o file
- ./algart.py -c rgb|hsv|hls|cymk -s <height>x<width> [-v] [-D] (-a algorithm | -i file) -o file
+ ./algart.py -c gray -s <width>x<height> [-f color] [-b color] [-v] [-D] (-a algorithm | -i file) -o file
+ ./algart.py -c rgb|hsv|hls|cymk -s <width>x<height> [-v] [-D] (-a algorithm | -i file) -o file
 
  ****
  For in-depth guide and extended usage, run ./algart -h
@@ -26,15 +26,15 @@ helpstring = """Usage:
 
 helpstringlong = """(lines with ~ are not yet implemented)
  
- ./algart -c gray -s <height>x<width> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
- ./algart -c rgb|hsv|hls|cymk -s <height>x<width> [-v] (-a algorithm | -i file) -o file
+ ./algart -c gray -s <width>x<height> [-f "H,L,S"] [-b "H,L,S"] [-v] (-a algorithm | -i file) -o file
+ ./algart -c rgb|hsv|hls|cymk -s <width>x<height> [-v] (-a algorithm | -i file) -o file
  ./algart -h
  
  Arguments:
  * = required
     -h                                Extended help (you are here)
  *  (-c | -C) gray|rgb|hsv|hls|cymk   Color mode (READ BELOW!!)
- *  -s <height>x<width>               Size of image
+ *  -s <width>x<height>               Size of image
     -f (h,s,v)                        Foreground color in HLS "0-360,0-1,0-1" format (grayscale mode only)
     -b (h,s,v)                        Background color in HLS "0-360,0-1,0-1" (grayscale mode only)
     -v                                Verbose mode (shows extra info and progress bars, might impact performance)
@@ -163,21 +163,21 @@ def main():
         except ValueError:
             err("ValueError: Invalid -s value, should be format \"WIDTHxHEIGHT\"")
     else:
-        err("MissingArgument: \"-s <height>x<width>\"  Size of image (height x width)")
+        err("MissingArgument: \"-s <width>x<height>\"  Size of image (width x height)")
     
-    modes = {"gray": ParserGray, "rgb": ParserRGB, "hsv": ParserHSV, "hls": ParserHLS, "cymk": ParserCYMK} 
+    modes = {"gray": ParserGray, "rgb": ParserRGB, "hsv": ParserHSV, "hls": ParserHLS, "cmyk": ParserCMYK} 
     if "-c" in args:
         colormode = args[args.index("-c")+1]
         isclamp = True 
         if colormode not in modes:
-            err("ValueError: Invalid color mode (-c gray|rgb|hsv|hsl|cymk)")
+            err("ValueError: Invalid color mode (-c gray|rgb|hsv|hsl|cmyk)")
     if "-C" in args:
         if isclamp: err("ConflictingArguments: Choose either -c OR -C")
         colormode = args[args.index("-C")+1]
         isclamp = False
         if colormode not in modes:
-            err("ValueError: Invalid color mode (-C gray|rgb|hsv|hsl|cymk)")
-    if isclamp is None: err("MissingArgument: Color mode ([-c|-C] gray|rgb|hsv|hsl|cymk)")
+            err("ValueError: Invalid color mode (-C gray|rgb|hsv|hsl|cmyk)")
+    if isclamp is None: err("MissingArgument: Color mode ([-c|-C] gray|rgb|hsv|hsl|cmyk)")
     
     if "-i" in args:
         algfile = args[args.index("-i")+1]

@@ -208,7 +208,10 @@ class Parser(object):
                     #end of current line
                 for v in self.reqvars:
                     pixval.append(self.locals[v])                   #[255,255,255]
-                self.pixeldata[currentCol, currentRow] = pixval          #[ ..., [255,255,255] ]
+                if self.debug:
+                    print(self.pixeldata)
+                    print("({}, {}): {}".format(currentCol, currentRow, pixval))
+                self.pixeldata[currentRow, currentCol] = pixval          #[ ..., [255,255,255] ]
                 self.optvars["P"] += 1
                 #end of column
             #end of row
@@ -234,7 +237,7 @@ class Parser(object):
         for y in xrange(self.height):
             for x in xrange(self.width):
                 if self.verbose: progbar(i, maxp)
-                color = self.convert(finaldata[x,y])
+                color = self.convert(finaldata[y,x]) #(y,x) when in array, (x,y) when in image. Ugh.
                 self.pix[x,y] = color
                 i += 1
         if self.debug: self.saveDebug(self.pixeldata)
@@ -251,7 +254,7 @@ class Parser(object):
         for y in xrange(self.height):
             for x in xrange(self.width):
                 f.write("(")
-                for z in array[x,y]:
+                for z in array[y,x]:
                     f.write(str(z) + ",")
                 f.write("),")
             f.write("\n")
@@ -286,38 +289,56 @@ class ParserRGB(Parser):
         b = p[2] / self.maxpvalue * 255
         return (int(round(r)), int(round(g)), int(round(b)))
 
+class ParserCMYK(Parser):
+    def newImage(self):
+        self.bands = 4
+        self.reqvars = ("C", "M", "Y", "K")
+        self.im = Image.new("CMYK", (self.width, self.height))
+        self.pix = self.im.load()
+    
+    def convert(self, p):
+        c = p[0] / self.maxpvalue * 255
+        m = p[1] / self.maxpvalue * 255
+        y = p[2] / self.maxpvalue * 255
+        k = p[3] / self.maxpvalue * 255
+        return (int(round(c)), int(round(m)), int(round(y)), int(round(k)))
+
+        
+    def saveImage(self):
+        rgb_im = self.im.convert("RGB")
+        rgb_im.save(self.filename, "png")
+        print("Saving as {}".format(self.filename))
+
 class ParserHLS(Parser):
     def newImage(self):
-        err("NOT IMPLEMENTED")
+        #err("NOT IMPLEMENTED")
         self.reqvars = ("H", "L", "S")
         self.bands = 3
         self.im = Image.new("RGB", (self.width, self.height))
         self.pix = self.im.load()
 
     def convert(self, p):
-        return colorsys.hls_to_rgb(p[0]/255, p[1]/255, p[2]/255)
+        h = p[0] / self.maxpvalue * 255
+        l = p[1] / self.maxpvalue * 255
+        s = p[2] / self.maxpvalue * 255
+        vals = colorsys.hls_to_rgb(h/255, l/255, s/255)
+        return (int(vals[0]*255), int(vals[1]*255), int(vals[2]*255))
     
 class ParserHSV(Parser):
     def newImage(self):
-        err("NOT IMPLEMENTED")
+        #err("NOT IMPLEMENTED")
         self.reqvars = ("H", "S", "V")
         self.bands = 3
         self.im = Image.new("RGB", (self.width, self.height))
         self.pix = self.im.load()
 
     def convert(self, p):
-        return colorsys.hsv_to_rgb(p[0]/255, p[1]/255, p[2]/255)
+        h = p[0] / self.maxpvalue * 255
+        s = p[1] / self.maxpvalue * 255
+        v = p[2] / self.maxpvalue * 255
+        vals = colorsys.hsv_to_rgb(h/255, s/255, v/255)
+        return (int(vals[0]*255), int(vals[1]*255), int(vals[2]*255))
 
-class ParserCYMK(Parser):
-    def newImage(self):
-        err("NOT IMPLEMENTED")
-        self.bands = 4
-        self.reqvars = ("C", "Y", "M", "K")
-        self.im = Image.new("CYMK", (self.width, self.height))
-        self.pix = self.im.load()
-    
-    def convert(self, p):
-        return p
 
 class ParserYIQ(Parser):  #TODO
     def newImage(self):
