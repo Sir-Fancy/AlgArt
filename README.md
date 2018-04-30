@@ -1,5 +1,5 @@
 # AlgArt
-###Algorithmic image generator in python
+### Algorithmic image generator in python
 ____
 
 (This is made for Python 2, and I haven't upgraded it to Python 3 yet.)
@@ -19,7 +19,7 @@ makes this image:
 
 [Here's some more examples](http://imgur.com/a/VXswe)
 
-###Documentation (accessible with -h)
+### Documentation (accessible with -h)
 ____
 
 ```
@@ -122,7 +122,7 @@ ____
     - End Algart files with .alg, even though it isn't required. (It'll be a thing, I swear!)  
 ```
 
-###Pro tips
+### Pro tips
 ____
 
 * Use a small image size like 64x64 and plug it into your favorite image editor to scale it up. Make sure "Nearest Neighbor" interpolation is selected, if available. This will perserve each pixel's sharp edges.
@@ -131,7 +131,7 @@ ____
 
 * K.I.S.S (Keep It Simple, Stupid)... unless you feel adventurous :)
 
-###Need ideas?
+### Need ideas?
 ____
 
 Try making:
@@ -144,9 +144,9 @@ Try making:
 
 (Message me if you actually pull one of these off, I'm curious if it's doable in its current state.)
 
-###My favorites
+### My favorites
 ______
 
 *Still* need ideas? Try tweaking some of my favorites:
 
-```./algart -c gray -s 80x80 -f "182,0.5,1" -a "K = (SIN(P/12) * 127) - (TAN(X/3) * 30) + (COS(Y/4) * 127)" -o lel.png```
+```./algart -c gray -s 80x80 -f "182,0.5,1" -a "K = (SIN(P/12) * 127) - (TAN(X/3) * 30) + (COS(Y/4) * 127)" -o test.png```
