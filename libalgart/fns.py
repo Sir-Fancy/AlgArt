@@ -23,4 +23,6 @@ class Fns(object):
                      "TANH": np.tanh,
                      "ABS" : np.absolute,
                      "SQRT": np.sqrt,
+                     "LOG" : np.log10,
+                     "LN"  : np.log,
                      "RAND": lambda x: np.random.random()}
