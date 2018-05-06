@@ -208,7 +208,7 @@ def main():
     if "-b" in args:
         if colormode == "gray":
             bgstr = args[args.index("-b")+1].split(",")
-            bgcolorval = map(float, bgcolorval)
+            bgcolorval = map(float, bgstr)
             if bgcolorval[0] > 360 or bgcolorval[0] < 0:
                 err("ValueError: Background color out of range. Must be format (0-360, 0.0-1.0, 0.0-1.0)")
             for bg in bgcolorval[1:]:

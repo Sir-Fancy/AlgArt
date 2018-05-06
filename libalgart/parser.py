@@ -233,6 +233,7 @@ class Parser(object):
             self.maxpvalue = np.amax(self.pixeldata)
             if self.verbose: vprint("Creative mode range: 0-{}\n".format(self.maxpvalue))
             finaldata = self.pixeldata
+        if self.debug: self.saveDebug(self.pixeldata)
         i = 0
         for y in xrange(self.height):
             for x in xrange(self.width):
@@ -240,8 +241,6 @@ class Parser(object):
                 color = self.convert(finaldata[y,x]) #(y,x) when in array, (x,y) when in image. Ugh.
                 self.pix[x,y] = color
                 i += 1
-        if self.debug: self.saveDebug(self.pixeldata)
-
     
     def saveImage(self):
         self.im.save(self.filename, "png")
